@@ -1,0 +1,5 @@
+app:
+  converter:
+    local-value: 10000
+  service-cb:
+    fixedRate: 100

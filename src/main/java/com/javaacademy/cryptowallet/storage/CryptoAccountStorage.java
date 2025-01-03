@@ -5,11 +5,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -29,19 +25,8 @@ public class CryptoAccountStorage {
     }
 
     public List<CryptoAccount> getAllAccount(String login) {
-        List<CryptoAccount> accounts = new ArrayList<>();
-        for (CryptoAccount account : data.values()) {
-            if (account.getLogin().equals(login)) {
-                accounts.add(account);
-            }
-        }
-        return accounts;
+        return data.values().stream()
+                .filter(account -> Objects.equals(account, login))
+                .toList();
     }
 }
-/**
- * Хранит: uuid -> криптосчет:
- * 3.1 Умеет сохранять счет. Если с таким uuid есть счет, то ошибка.
- * 3.2 Умеет отдавать счет по uuid.
- * 3.3. Умеет отдавать все счета пользователя. На вход логин пользователя, на выход все счета пользователя.
- */
-
