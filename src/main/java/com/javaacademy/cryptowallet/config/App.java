@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties({AppConfigUsd.class, AppConfigRub.class})
 public class App {
     @Bean
-    public OkHttpClient okHttpClient() {
-        return new OkHttpClient.Builder().build();
+    public OkHttpClient client() {
+        return new OkHttpClient();
     }
 }

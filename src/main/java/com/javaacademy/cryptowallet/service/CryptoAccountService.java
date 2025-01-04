@@ -5,6 +5,7 @@ import com.javaacademy.cryptowallet.crypto.CryptoCurrencyType;
 import com.javaacademy.cryptowallet.dto.CryptoAccountDto;
 import com.javaacademy.cryptowallet.mapper.CryptoAccountMapper;
 import com.javaacademy.cryptowallet.service.integration.IntegrationService;
+import com.javaacademy.cryptowallet.service.interfaces.ObtainingCryptocurrencyValuesInDollars;
 import com.javaacademy.cryptowallet.storage.CryptoAccountStorage;
 import com.javaacademy.cryptowallet.storage.UserStorage;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class CryptoAccountService {
     private final CryptoAccountStorage accountStorage;
     private final UserStorage userStorage;
     private final CryptoAccountMapper accountMapper;
-    private final ServiceObtainingValueCryptocurrenciesDollars cryptocurrenciesDollars;
+    private final ObtainingCryptocurrencyValuesInDollars cryptocurrenciesDollars;
     private final IntegrationService integrationService;
 
     public CryptoAccount getAccount(UUID uuid) {
@@ -40,7 +41,7 @@ public class CryptoAccountService {
 
         CryptoAccount cryptoAccount = getAccount(uuid);
         String cryptoTypeName = cryptoAccount.getCryptoCurrencyType().getDescription();
-        BigDecimal cryptocurrencyDollars = cryptocurrenciesDollars.gettingValueCryptocurrencyDollars(cryptoTypeName);
+        BigDecimal cryptocurrencyDollars = cryptocurrenciesDollars.getCryptoValueInDollars(cryptoTypeName);
         BigDecimal dollars = integrationService.convertRublesToDollar(withdrawRubles);
 
         BigDecimal cryptoToSell = dollars.divide(cryptocurrencyDollars, 10, RoundingMode.HALF_UP);
@@ -51,6 +52,7 @@ public class CryptoAccountService {
         cryptoAccount.setBalance(cryptoAccount.getBalance().subtract(cryptoToSell));
         return String.format("Операция прошла успешно. Продано %.10f %s.", cryptoToSell, cryptoTypeName);
     }
+
     public BigDecimal getRubleEquivalentBalanceAllUserAccounts(String userName) {
         log.info("Получение рублевого эквивалента всех счетов пользователя {}", userName);
         List<CryptoAccount> userAccounts = accountStorage.getData()
@@ -65,7 +67,7 @@ public class CryptoAccountService {
         BigDecimal totalRubleEquivalent = userAccounts.stream()
                 .map(account -> {
                     String cryptoTypeName = account.getCryptoCurrencyType().getDescription();
-                    BigDecimal cryptocurrencyDollars = cryptocurrenciesDollars.gettingValueCryptocurrencyDollars(cryptoTypeName);
+                    BigDecimal cryptocurrencyDollars = cryptocurrenciesDollars.getCryptoValueInDollars(cryptoTypeName);
                     BigDecimal balanceInDollars = account.getBalance().multiply(cryptocurrencyDollars);
                     return integrationService.convertDollarsToRuble(balanceInDollars);
                 })
@@ -74,11 +76,12 @@ public class CryptoAccountService {
         log.info("Рублевый эквивалент всех счетов пользователя {}: {}", userName, totalRubleEquivalent);
         return totalRubleEquivalent;
     }
+
     public BigDecimal getAccountBalanceInRubles(UUID uuid) {
         CryptoAccount cryptoAccount = getAccount(uuid);
         String cryptoTypeName = cryptoAccount.getCryptoCurrencyType().getDescription();
 
-        BigDecimal cryptocurrencyDollars = cryptocurrenciesDollars.gettingValueCryptocurrencyDollars(cryptoTypeName);
+        BigDecimal cryptocurrencyDollars = cryptocurrenciesDollars.getCryptoValueInDollars(cryptoTypeName);
         BigDecimal balanceInDollars = cryptoAccount.getBalance().multiply(cryptocurrencyDollars);
 
         return integrationService.convertDollarsToRuble(balanceInDollars);
@@ -90,7 +93,7 @@ public class CryptoAccountService {
         CryptoAccount cryptoAccount = getAccount(uuid);
         String cryptoTypeName = cryptoAccount.getCryptoCurrencyType().getDescription();
 
-        BigDecimal cryptocurrencyDollars = cryptocurrenciesDollars.gettingValueCryptocurrencyDollars(cryptoTypeName);
+        BigDecimal cryptocurrencyDollars = cryptocurrenciesDollars.getCryptoValueInDollars(cryptoTypeName);
         BigDecimal dollars = integrationService.convertRublesToDollar(sumRubles);
 
         BigDecimal totalSum = dollars.divide(cryptocurrencyDollars, 10, RoundingMode.HALF_UP);

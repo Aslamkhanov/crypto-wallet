@@ -7,5 +7,4 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "app.service-cb")
 public class AppConfigRub {
     private String url;
-    private int fixedRate;
 }

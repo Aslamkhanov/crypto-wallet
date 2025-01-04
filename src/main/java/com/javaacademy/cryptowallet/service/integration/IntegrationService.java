@@ -15,11 +15,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @Service
-@Profile("prod")
 @RequiredArgsConstructor
 public class IntegrationService {
     private final OkHttpClient client;
     private final AppConfigRub configRub;
+
     @SneakyThrows
     public BigDecimal convertDollarsToRuble(BigDecimal dollars) {
         BigDecimal rate = getUsdRate();
@@ -31,6 +31,7 @@ public class IntegrationService {
         BigDecimal rate = getUsdRate();
         return rubles.divide(rate, 10, RoundingMode.HALF_UP);
     }
+
     @SneakyThrows
     public BigDecimal getUsdRate() {
         Request request = new Request.Builder()
@@ -40,9 +41,9 @@ public class IntegrationService {
         @Cleanup Response response = client.newCall(request).execute();
         if (response.isSuccessful() && response.body() != null) {
             String responseBody = response.body().string();
-           return JsonPath.parse(responseBody)
-                   .read(JsonPath.compile("$['rates'].['USD']"),
-                           BigDecimal.class);
+            return JsonPath.parse(responseBody)
+                    .read(JsonPath.compile("$['rates'].['USD']"),
+                            BigDecimal.class);
         }
         throw new RuntimeException("Запрос не прошел");
     }

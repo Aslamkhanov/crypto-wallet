@@ -1,6 +1,7 @@
 package com.javaacademy.cryptowallet.service;
 
 import com.javaacademy.cryptowallet.config.AppConfigUsd;
+import com.javaacademy.cryptowallet.service.interfaces.ObtainingCryptocurrencyValuesInDollars;
 import com.jayway.jsonpath.JsonPath;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,13 @@ import java.math.BigDecimal;
 @Service
 @RequiredArgsConstructor
 @Profile("prod")
-public class ServiceObtainingValueCryptocurrenciesDollars {
+public class ServiceObtainingValueCryptocurrenciesDollars implements ObtainingCryptocurrencyValuesInDollars {
     private final OkHttpClient client;
     private final AppConfigUsd appConfigUsd;
 
     @SneakyThrows
-    public BigDecimal gettingValueCryptocurrencyDollars(String cryptoName) {
+    @Override
+    public BigDecimal getCryptoValueInDollars(String cryptoName) {
         String url = String.format("%s/simple/price?ids=%s&vs_currencies=usd",
                 appConfigUsd.getUrl(), cryptoName);
 
@@ -37,6 +39,5 @@ public class ServiceObtainingValueCryptocurrenciesDollars {
         String jsonResponse = response.body().string();
         String jsonPath = String.format("$['%s']['usd']", cryptoName);
         return JsonPath.parse(jsonResponse).read(jsonPath, BigDecimal.class);
-
     }
 }

@@ -2,6 +2,7 @@ package com.javaacademy.cryptowallet.service.integration;
 
 import com.javaacademy.cryptowallet.config.AppConfigRub;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
@@ -9,18 +10,17 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 @Service
-@RequiredArgsConstructor
 @Profile("local")
 public class LocalIntegrationService {
-    private final AppConfigRub configRub;
+    private static final int SCALE_TEN = 10;
+    @Value("${app.usd.fixedRate:100}")
+    private BigDecimal fixedRate;
 
     public BigDecimal convertDollarsToRuble(BigDecimal dollars) {
-        BigDecimal fixedRate = BigDecimal.valueOf(configRub.getFixedRate());
         return dollars.multiply(fixedRate);
     }
 
     public BigDecimal convertRublesToDollar(BigDecimal rubles) {
-        BigDecimal fixedRate = BigDecimal.valueOf(configRub.getFixedRate());
-        return rubles.divide(fixedRate, 9, RoundingMode.HALF_UP);
+        return rubles.divide(fixedRate, SCALE_TEN, RoundingMode.HALF_UP);
     }
 }
