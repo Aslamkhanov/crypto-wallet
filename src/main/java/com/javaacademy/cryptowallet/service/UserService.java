@@ -1,5 +1,6 @@
 package com.javaacademy.cryptowallet.service;
 
+import com.javaacademy.cryptowallet.dto.UpdatePasswordDto;
 import com.javaacademy.cryptowallet.entity.User;
 import com.javaacademy.cryptowallet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +23,12 @@ public class UserService {
                         + login + " не найден"));
     }
 
-    public void resetUsersPassword(String login, String oldPassword, String newPassword) {
-        User user = getUserByLogin(login);
-        if (!user.getPassword().equals(oldPassword)) {
+    public void resetUsersPassword(UpdatePasswordDto passwordDto) {
+        User user = getUserByLogin(passwordDto.getLogin());
+        if (!user.getPassword().equals(passwordDto.getOldPassword())) {
             throw new RuntimeException("Неправильный пароль");
         }
-        user.setPassword(newPassword);
+        user.setPassword(passwordDto.getNewPassword());
         log.info("Пароль изменен!");
     }
 }

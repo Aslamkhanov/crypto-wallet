@@ -1,8 +1,10 @@
 package com.javaacademy.cryptowallet.service;
 
-import com.javaacademy.cryptowallet.crypto.CryptoCurrencyType;
 import com.javaacademy.cryptowallet.dto.CryptoAccountDto;
+import com.javaacademy.cryptowallet.dto.CryptoCreateDto;
+import com.javaacademy.cryptowallet.dto.ReplenishesAccountDto;
 import com.javaacademy.cryptowallet.entity.CryptoAccount;
+import com.javaacademy.cryptowallet.exeption.ResourceNotFoundException;
 import com.javaacademy.cryptowallet.mapper.CryptoAccountMapper;
 import com.javaacademy.cryptowallet.repository.CryptoRepository;
 import com.javaacademy.cryptowallet.repository.UserRepository;
@@ -36,13 +38,13 @@ public class CryptoAccountService {
         return cryptoRepository.getAccount(uuid);
     }
 
-    public String sellCryptocurrencyForRubles(UUID uuid, BigDecimal withdrawRubles) {
-        log.info("Снять со счета {} сумму {} рублей", uuid, withdrawRubles);
+    public String sellCryptocurrencyForRubles(ReplenishesAccountDto accountDto) {
+        log.info("Снять со счета {} сумму {} рублей", accountDto.getId(), accountDto.getRublesAmount());
 
-        CryptoAccount cryptoAccount = getAccount(uuid);
+        CryptoAccount cryptoAccount = getAccount(accountDto.getId());
         String cryptoTypeName = cryptoAccount.getCryptoCurrencyType().getDescription();
         BigDecimal cryptocurrencyDollars = cryptocurrenciesDollars.getCryptoValueInDollars(cryptoTypeName);
-        BigDecimal dollars = integrationService.convertRublesToDollar(withdrawRubles);
+        BigDecimal dollars = integrationService.convertRublesToDollar(accountDto.getRublesAmount());
 
         BigDecimal cryptoToSell = dollars.divide(cryptocurrencyDollars, 8, RoundingMode.HALF_UP);
 
@@ -86,41 +88,41 @@ public class CryptoAccountService {
         return integrationService.convertDollarsToRuble(balanceInDollars);
     }
 
-    public void buyCryptocurrencyForRubles(UUID uuid, BigDecimal sumRubles) {
-        log.info("Пополнение счета {} на сумму {} рублей", uuid, sumRubles);
-        CryptoAccount cryptoAccount = getAccount(uuid);
+    public void buyCryptocurrencyForRubles(ReplenishesAccountDto accountDto) {
+        log.info("Пополнение счета {} на сумму {} рублей", accountDto.getId(), accountDto.getRublesAmount());
+        CryptoAccount cryptoAccount = getAccount(accountDto.getId());
         String cryptoTypeName = cryptoAccount.getCryptoCurrencyType().getDescription();
 
         BigDecimal cryptocurrencyDollars = cryptocurrenciesDollars.getCryptoValueInDollars(cryptoTypeName);
-        BigDecimal dollars = integrationService.convertRublesToDollar(sumRubles);
+        BigDecimal dollars = integrationService.convertRublesToDollar(accountDto.getRublesAmount());
 
         BigDecimal totalSum = dollars.divide(cryptocurrencyDollars, 8, RoundingMode.HALF_UP);
 
         log.info("Добавление {} {} к балансу", totalSum, cryptoTypeName);
         cryptoAccount.setBalance(cryptoAccount.getBalance().add(totalSum));
 
-        log.info("Обновленный баланс счета {}: {}", uuid, cryptoAccount.getBalance());
+        log.info("Обновленный баланс счета {}: {}", accountDto.getId(), cryptoAccount.getBalance());
     }
 
-    public List<CryptoAccountDto> getAllAccounts(String login) {
+    public List<CryptoAccountDto> getAllAccounts(String login) throws ResourceNotFoundException {
         List<CryptoAccountDto> accountDto = cryptoRepository.getAccountStorage().getData()
                 .values().stream()
                 .filter(account -> Objects.equals(account.getLogin(), login))
                 .map(accountMapper::convertCryptoAccountDto)
                 .collect(Collectors.toList());
         if (accountDto.isEmpty()) {
-            throw new RuntimeException("Счета с таким логином нет: " + login);
+            throw new ResourceNotFoundException("Счета с таким логином нет: " + login);
         }
         return accountDto;
     }
 
-    public CryptoAccount createCryptoAccountUser(String login, CryptoCurrencyType cryptoCurrencyType) {
-        if (!userRepository.getUserStorage().getData().containsKey(login)) {
-            throw new RuntimeException("Такого пользователя нет: " + login);
+    public CryptoAccount createCryptoAccountUser(CryptoCreateDto cryptoCreateDto) {
+        if (!userRepository.getUserStorage().getData().containsKey(cryptoCreateDto.getUserName())) {
+            throw new RuntimeException("Такого пользователя нет: " + cryptoCreateDto.getUserName());
         }
         CryptoAccount account = new CryptoAccount(
-                login,
-                cryptoCurrencyType,
+                cryptoCreateDto.getUserName(),
+                cryptoCreateDto.getCryptoType(),
                 BigDecimal.ZERO,
                 UUID.randomUUID());
         cryptoRepository.saveAccount(account);

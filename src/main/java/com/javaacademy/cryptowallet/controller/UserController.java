@@ -84,8 +84,6 @@ public class UserController {
     @PatchMapping("/reset-password")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void resetsPassword(@RequestBody UpdatePasswordDto request) {
-        userService.resetUsersPassword(request.getLogin(),
-                request.getOldPassword(),
-                request.getNewPassword());
+        userService.resetUsersPassword(request);
     }
 }

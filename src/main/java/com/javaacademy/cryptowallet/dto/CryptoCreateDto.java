@@ -14,7 +14,7 @@ import lombok.NonNull;
 @Schema(description = "Дто для создания крипто кошелька")
 public class CryptoCreateDto {
     @NonNull
-    @JsonProperty("username")
+    @JsonProperty("user_name")
     @Schema(description = "логи пользователя")
     private String userName;
 

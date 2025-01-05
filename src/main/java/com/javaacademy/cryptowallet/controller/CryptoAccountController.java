@@ -6,6 +6,7 @@ import com.javaacademy.cryptowallet.dto.CryptoAccountDto;
 import com.javaacademy.cryptowallet.dto.CryptoCreateDto;
 import com.javaacademy.cryptowallet.dto.ExceptionResponseDto;
 import com.javaacademy.cryptowallet.dto.ReplenishesAccountDto;
+import com.javaacademy.cryptowallet.exeption.ResourceNotFoundException;
 import com.javaacademy.cryptowallet.service.CryptoAccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -88,7 +89,7 @@ public class CryptoAccountController {
     }
     )
     @GetMapping("/balance")
-    public BigDecimal showsRubleEquivalentCryptoAccount(@PathVariable String userName) {
+    public BigDecimal showsRubleEquivalentCryptoAccount(@RequestParam String userName) {
         return service.getRubleEquivalentBalanceAllUserAccounts(userName);
     }
 
@@ -120,8 +121,7 @@ public class CryptoAccountController {
     )
     @PostMapping("/refill")
     public void replenishesAccount(@RequestBody ReplenishesAccountDto replenishesAccountDto) {
-        service.buyCryptocurrencyForRubles(replenishesAccountDto.getId(),
-                replenishesAccountDto.getRublesAmount());
+        service.buyCryptocurrencyForRubles(replenishesAccountDto);
     }
 
     @Operation(
@@ -152,8 +152,7 @@ public class CryptoAccountController {
     )
     @PostMapping("/withdrawal")
     public void withdrawsRublesFromAccount(@RequestBody ReplenishesAccountDto replenishesAccountDto) {
-        service.sellCryptocurrencyForRubles(replenishesAccountDto.getId(),
-                replenishesAccountDto.getRublesAmount());
+        service.sellCryptocurrencyForRubles(replenishesAccountDto);
     }
 
     @Operation(
@@ -185,9 +184,7 @@ public class CryptoAccountController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UUID createCryptoAccount(@RequestBody CryptoCreateDto cryptoCreateDto) {
-        String userName = cryptoCreateDto.getUserName();
-        CryptoCurrencyType cryptoType = cryptoCreateDto.getCryptoType();
-        CryptoAccount cryptoAccount = service.createCryptoAccountUser(userName, cryptoType);
+        CryptoAccount cryptoAccount = service.createCryptoAccountUser(cryptoCreateDto);
         return cryptoAccount.getUniqueAccountNumber();
     }
 
@@ -218,7 +215,11 @@ public class CryptoAccountController {
     }
     )
     @GetMapping
-    public List<CryptoAccountDto> getAllAccounts(@RequestParam String username) {
-        return service.getAllAccounts(username);
+    public List<CryptoAccountDto> getAllAccounts(@RequestParam String userName) {
+        try {
+            return service.getAllAccounts(userName);
+        } catch (ResourceNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
