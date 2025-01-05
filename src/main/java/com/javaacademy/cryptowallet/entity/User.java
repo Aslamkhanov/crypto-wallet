@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Schema(description = "Представления для создания пользователя")
 public class User {
-
     @Schema(description = "уникальный логин пользователя")
     private String login;
 

@@ -1,7 +1,7 @@
 package com.javaacademy.cryptowallet.service;
 
 import com.javaacademy.cryptowallet.entity.User;
-import com.javaacademy.cryptowallet.storage.UserStorage;
+import com.javaacademy.cryptowallet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class UserService {
-    private final UserStorage userStorage;
+    private final UserRepository userRepository;
 
     public void saveNewUser(User user) {
-        userStorage.saveUser(user);
+        userRepository.saveUser(user);
     }
 
     public User getUserByLogin(String login) {
-        return userStorage.getUser(login)
+        return userRepository.getUser(login)
                 .orElseThrow(() -> new RuntimeException("Пользователь с логином "
                         + login + " не найден"));
     }

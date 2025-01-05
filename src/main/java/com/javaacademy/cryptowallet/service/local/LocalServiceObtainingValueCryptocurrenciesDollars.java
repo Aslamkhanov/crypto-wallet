@@ -1,4 +1,4 @@
-package com.javaacademy.cryptowallet.service;
+package com.javaacademy.cryptowallet.service.local;
 
 
 import com.javaacademy.cryptowallet.service.interfaces.ObtainingCryptocurrencyValuesInDollars;
@@ -11,9 +11,7 @@ import java.math.BigDecimal;
 @Profile("local")
 @Service
 public class LocalServiceObtainingValueCryptocurrenciesDollars implements ObtainingCryptocurrencyValuesInDollars {
-
-    //@Value("${app.converter.local-value}")
-    @Value("${app.converter.local-value:10000}")
+    @Value("${app.converter.local-value}")
     private BigDecimal localValue;
 
     @Override

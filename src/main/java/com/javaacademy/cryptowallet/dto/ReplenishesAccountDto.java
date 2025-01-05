@@ -14,7 +14,6 @@ import java.util.UUID;
 @Data
 @Schema(description = "Дто для изменения баланса кошелька")
 public class ReplenishesAccountDto {
-
     @Schema(description = "уникальный номер кошелька")
     @JsonProperty("account_id")
     private UUID id;

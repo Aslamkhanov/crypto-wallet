@@ -1,6 +1,6 @@
 package com.javaacademy.cryptowallet.controller;
 
-import com.javaacademy.cryptowallet.crypto.CryptoAccount;
+import com.javaacademy.cryptowallet.entity.CryptoAccount;
 import com.javaacademy.cryptowallet.crypto.CryptoCurrencyType;
 import com.javaacademy.cryptowallet.dto.CryptoAccountDto;
 import com.javaacademy.cryptowallet.dto.CryptoCreateDto;

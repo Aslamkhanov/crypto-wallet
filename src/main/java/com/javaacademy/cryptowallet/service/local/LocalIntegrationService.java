@@ -1,7 +1,5 @@
-package com.javaacademy.cryptowallet.service.integration;
+package com.javaacademy.cryptowallet.service.local;
 
-import com.javaacademy.cryptowallet.config.AppConfigRub;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
@@ -13,7 +11,7 @@ import java.math.RoundingMode;
 @Profile("local")
 public class LocalIntegrationService {
     private static final int SCALE_TEN = 10;
-    @Value("${app.usd.fixedRate:100}")
+    @Value("${app.usd.fixedRate}")
     private BigDecimal fixedRate;
 
     public BigDecimal convertDollarsToRuble(BigDecimal dollars) {

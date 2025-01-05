@@ -1,6 +1,6 @@
 package com.javaacademy.cryptowallet.mapper;
 
-import com.javaacademy.cryptowallet.crypto.CryptoAccount;
+import com.javaacademy.cryptowallet.entity.CryptoAccount;
 import com.javaacademy.cryptowallet.dto.CryptoAccountDto;
 import org.springframework.stereotype.Component;
 

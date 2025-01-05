@@ -9,6 +9,7 @@ import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Schema(description = "Дто для обновления пароля")
 public class UpdatePasswordDto {
     @NonNull
