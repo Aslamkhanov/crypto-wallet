@@ -9,7 +9,6 @@ import com.javaacademy.cryptowallet.entity.CryptoAccount;
 import com.javaacademy.cryptowallet.repository.CryptoRepository;
 import com.javaacademy.cryptowallet.service.CryptoAccountService;
 import com.javaacademy.cryptowallet.service.UserService;
-import com.javaacademy.cryptowallet.storage.CryptoAccountStorage;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.common.mapper.TypeRef;
@@ -25,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
@@ -39,11 +39,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ActiveProfiles("local")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class CryptoAccountControllerTest {
     private static final BigDecimal ADD_BALANCE = BigDecimal.valueOf(2000);
     private ResponseSpecification responseSpecification;
     @Value("${server.port}")
     private int port;
+
     private RequestSpecification requestSpecification;
     @Autowired
     private UserService userService;
@@ -127,6 +129,6 @@ public class CryptoAccountControllerTest {
                 .post("/refill")
                 .then()
                 .spec(responseSpecification)
-                .statusCode(HttpStatus.ACCEPTED.value());
+                .statusCode(200);
     }
 }

@@ -1,6 +1,7 @@
 package com.javaacademy.cryptowallet.service.integration;
 
 import com.javaacademy.cryptowallet.config.AppConfigRub;
+import com.javaacademy.cryptowallet.service.interfaces.RublesService;
 import com.jayway.jsonpath.JsonPath;
 import lombok.Cleanup;
 import lombok.RequiredArgsConstructor;
@@ -16,18 +17,19 @@ import java.math.RoundingMode;
 
 @Service
 @RequiredArgsConstructor
-public class IntegrationRubleConverterService {
+@Profile("prod")
+public class IntegrationRubleConverterService implements RublesService {
     private static final String RATES_USD = "$['rates'].['USD']";
     private final OkHttpClient client;
     private final AppConfigRub configRub;
     private static final int EIGHT = 8;
-
+    @Override
     @SneakyThrows
     public BigDecimal convertDollarsToRuble(BigDecimal dollars) {
         BigDecimal rate = getUsdRate();
         return dollars.divide(rate, EIGHT, RoundingMode.HALF_UP);
     }
-
+    @Override
     @SneakyThrows
     public BigDecimal convertRublesToDollar(BigDecimal rubles) {
         BigDecimal rate = getUsdRate();
