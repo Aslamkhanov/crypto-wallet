@@ -9,16 +9,17 @@ import java.math.RoundingMode;
 
 @Service
 @Profile("local")
-public class LocalIntegrationService {
-    private static final int SCALE_TEN = 10;
+public class LocalIRubleConverterService {
+    private static final int EIGHT = 8;
+
     @Value("${app.usd.fixedRate}")
     private BigDecimal fixedRate;
 
     public BigDecimal convertDollarsToRuble(BigDecimal dollars) {
-        return dollars.multiply(fixedRate);
+        return dollars.divide(fixedRate, EIGHT, RoundingMode.HALF_UP);
     }
 
     public BigDecimal convertRublesToDollar(BigDecimal rubles) {
-        return rubles.divide(fixedRate, SCALE_TEN, RoundingMode.HALF_UP);
+        return rubles.multiply(fixedRate);
     }
 }

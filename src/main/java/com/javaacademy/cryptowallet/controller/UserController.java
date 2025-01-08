@@ -2,6 +2,7 @@ package com.javaacademy.cryptowallet.controller;
 
 import com.javaacademy.cryptowallet.dto.ExceptionResponseDto;
 import com.javaacademy.cryptowallet.dto.UpdatePasswordDto;
+import com.javaacademy.cryptowallet.dto.UserCreateDto;
 import com.javaacademy.cryptowallet.entity.User;
 import com.javaacademy.cryptowallet.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -51,8 +52,9 @@ public class UserController {
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registersNewUser(@RequestBody User user) {
-        userService.saveNewUser(user);
+    public UserCreateDto registersNewUser(@RequestBody UserCreateDto userDto) {
+        userService.saveNewUser(userDto);
+        return userDto;
     }
 
     @Operation(

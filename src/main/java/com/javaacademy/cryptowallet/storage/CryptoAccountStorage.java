@@ -13,5 +13,5 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Data
 public class CryptoAccountStorage {
-    private final Map<UUID, CryptoAccount> data = new HashMap<>();
+    private final Map<UUID, CryptoAccount> cryptoData = new HashMap<>();
 }

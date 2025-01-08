@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CryptoAccountMapper {
     public CryptoAccountDto convertCryptoAccountDto(CryptoAccount account) {
-        return new CryptoAccountDto(account.getLogin(),
+        return new CryptoAccountDto(account.getUserLogin(),
                 account.getCryptoCurrencyType(),
                 account.getBalance(),
                 account.getUniqueAccountNumber());

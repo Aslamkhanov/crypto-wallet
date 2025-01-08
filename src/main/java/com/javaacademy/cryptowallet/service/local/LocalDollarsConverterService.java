@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 
 @Profile("local")
 @Service
-public class LocalServiceObtainingValueCryptocurrenciesDollars implements ObtainingCryptocurrencyValuesInDollars {
+public class LocalDollarsConverterService implements ObtainingCryptocurrencyValuesInDollars {
     @Value("${app.converter.local-value}")
     private BigDecimal localValue;
 

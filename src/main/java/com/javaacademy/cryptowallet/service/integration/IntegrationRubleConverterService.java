@@ -8,6 +8,7 @@ import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,21 +16,22 @@ import java.math.RoundingMode;
 
 @Service
 @RequiredArgsConstructor
-public class IntegrationService {
+public class IntegrationRubleConverterService {
     private static final String RATES_USD = "$['rates'].['USD']";
     private final OkHttpClient client;
     private final AppConfigRub configRub;
+    private static final int EIGHT = 8;
 
     @SneakyThrows
     public BigDecimal convertDollarsToRuble(BigDecimal dollars) {
         BigDecimal rate = getUsdRate();
-        return dollars.multiply(rate);
+        return dollars.divide(rate, EIGHT, RoundingMode.HALF_UP);
     }
 
     @SneakyThrows
     public BigDecimal convertRublesToDollar(BigDecimal rubles) {
         BigDecimal rate = getUsdRate();
-        return rubles.divide(rate, 8, RoundingMode.HALF_UP);
+        return rubles.multiply(rate);
     }
 
     public BigDecimal getUsdRate() {

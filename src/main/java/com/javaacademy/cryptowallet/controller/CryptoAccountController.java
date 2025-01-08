@@ -120,8 +120,9 @@ public class CryptoAccountController {
     }
     )
     @PostMapping("/refill")
-    public void replenishesAccount(@RequestBody ReplenishesAccountDto replenishesAccountDto) {
+    public ReplenishesAccountDto replenishesAccount(@RequestBody ReplenishesAccountDto replenishesAccountDto) {
         service.buyCryptocurrencyForRubles(replenishesAccountDto);
+        return replenishesAccountDto;
     }
 
     @Operation(

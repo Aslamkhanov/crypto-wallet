@@ -1,4 +1,4 @@
-package com.javaacademy.cryptowallet.service;
+package com.javaacademy.cryptowallet.service.integration;
 
 import com.javaacademy.cryptowallet.config.AppConfigUsd;
 import com.javaacademy.cryptowallet.service.interfaces.ObtainingCryptocurrencyValuesInDollars;
@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 @Service
 @RequiredArgsConstructor
 @Profile("prod")
-public class ServiceObtainingValueCryptocurrenciesDollars implements ObtainingCryptocurrencyValuesInDollars {
+public class IntegrationDollarsConverterService implements ObtainingCryptocurrencyValuesInDollars {
     private static final String FORMAT_USD = "$['%s']['usd']";
     private static final String FORMAT_URL = "%s/simple/price?ids=%s&vs_currencies=usd";
     private final OkHttpClient client;

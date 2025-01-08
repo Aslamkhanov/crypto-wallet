@@ -15,7 +15,7 @@ import java.util.UUID;
 @Schema(description = "Представление для крипто кошелька ")
 public class CryptoAccount {
     @Schema(description = "Логин крипто кошелька")
-    private String login;
+    private String userLogin;
 
     @Schema(description = "Вид крипто валюты")
     private CryptoCurrencyType cryptoCurrencyType;

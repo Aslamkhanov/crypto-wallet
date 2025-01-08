@@ -1,7 +1,9 @@
 package com.javaacademy.cryptowallet.service;
 
 import com.javaacademy.cryptowallet.dto.UpdatePasswordDto;
+import com.javaacademy.cryptowallet.dto.UserCreateDto;
 import com.javaacademy.cryptowallet.entity.User;
+import com.javaacademy.cryptowallet.mapper.UserMapper;
 import com.javaacademy.cryptowallet.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,8 +14,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
-    public void saveNewUser(User user) {
+    public void saveNewUser(UserCreateDto userDto) {
+        User user = userMapper.convertUser(userDto);
         userRepository.saveUser(user);
     }
 
