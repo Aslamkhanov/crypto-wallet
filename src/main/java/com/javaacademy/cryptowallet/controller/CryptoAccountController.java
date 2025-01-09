@@ -1,11 +1,10 @@
 package com.javaacademy.cryptowallet.controller;
 
-import com.javaacademy.cryptowallet.entity.CryptoAccount;
-import com.javaacademy.cryptowallet.crypto.CryptoCurrencyType;
 import com.javaacademy.cryptowallet.dto.CryptoAccountDto;
 import com.javaacademy.cryptowallet.dto.CryptoCreateDto;
 import com.javaacademy.cryptowallet.dto.ExceptionResponseDto;
 import com.javaacademy.cryptowallet.dto.ReplenishesAccountDto;
+import com.javaacademy.cryptowallet.entity.CryptoAccount;
 import com.javaacademy.cryptowallet.exeption.ResourceNotFoundException;
 import com.javaacademy.cryptowallet.service.CryptoAccountService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,7 +15,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -57,14 +63,14 @@ public class CryptoAccountController {
     }
     )
     @GetMapping("/balance/{id}")
-    public BigDecimal showsRubleEquivalentCryptoAccount(@PathVariable UUID id) {
+    public BigDecimal showsRubleEquivalentCryptoAccountId(@PathVariable UUID id) {
         return service.getAccountBalanceInRubles(id);
     }
 
     @Operation(
             summary = "Получаем баланс в рублях, со всех крипто счетов",
-            description = "Получаем общий баланс в рублях, " +
-                    "всех крипто кошельков пользователя")
+            description = "Получаем общий баланс в рублях, "
+                   + "всех крипто кошельков пользователя")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -152,8 +158,8 @@ public class CryptoAccountController {
     }
     )
     @PostMapping("/withdrawal")
-    public void withdrawsRublesFromAccount(@RequestBody ReplenishesAccountDto replenishesAccountDto) {
-        service.sellCryptocurrencyForRubles(replenishesAccountDto);
+    public String withdrawsRublesFromAccount(@RequestBody ReplenishesAccountDto replenishesAccountDto) {
+        return service.sellCryptocurrencyForRubles(replenishesAccountDto);
     }
 
     @Operation(

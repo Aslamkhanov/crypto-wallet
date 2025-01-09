@@ -3,7 +3,6 @@ package com.javaacademy.cryptowallet.repository;
 import com.javaacademy.cryptowallet.entity.CryptoAccount;
 import com.javaacademy.cryptowallet.storage.CryptoAccountStorage;
 import lombok.Data;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

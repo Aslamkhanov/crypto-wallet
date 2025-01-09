@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import static io.restassured.RestAssured.given;
@@ -24,7 +25,11 @@ import static org.hamcrest.Matchers.equalTo;
 @ActiveProfiles("local")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class UserControllerTest {
+    private static final String LOGIN = "Anbu";
+    private static final String EMAIL = "anbumen@mail.ru";
+    private static final String PASSWORD = "123qwerty";
     private ResponseSpecification responseSpecification;
     @Value("${server.port}")
     private int port;
@@ -42,22 +47,15 @@ public class UserControllerTest {
         responseSpecification = new ResponseSpecBuilder()
                 .log(LogDetail.ALL)
                 .build();
-        UserCreateDto userCreateDto = new UserCreateDto(
-                "Ivan",
-                "ivan@mail.ru",
-                "123qwerty");
-        userService.saveNewUser(userCreateDto);
     }
-
 
     @Test
     @DisplayName("Регистрация пользователя")
     public void registersNewUserSuccess() {
         UserCreateDto userCreateDto = new UserCreateDto(
-                "Anbu",
-                "anbu@mail.ru",
-                "qwerty123");
-
+                LOGIN,
+                EMAIL,
+                PASSWORD);
         given(requestSpecification)
                 .contentType("application/json")
                 .body(userCreateDto)
@@ -65,14 +63,19 @@ public class UserControllerTest {
                 .then()
                 .spec(responseSpecification)
                 .statusCode(HttpStatus.CREATED.value())
-                .body("login", equalTo("Anbu"))
-                .body("email", equalTo("anbu@mail.ru"))
-                .body("password", equalTo("qwerty123"));
+                .body("login", equalTo(LOGIN))
+                .body("email", equalTo(EMAIL))
+                .body("password", equalTo(PASSWORD));
     }
 
     @Test
     @DisplayName("Обновление пароля пользователя")
     public void updateTeacherSuccess() {
+        UserCreateDto userCreateDto = new UserCreateDto(
+                "Ivan",
+                "ivan@mail.ru",
+                "123qwerty");
+        userService.saveNewUser(userCreateDto);
         UpdatePasswordDto passwordDto = new UpdatePasswordDto(
                 "Ivan",
                 "123qwerty",
