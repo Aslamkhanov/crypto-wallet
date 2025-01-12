@@ -11,14 +11,16 @@ import java.math.RoundingMode;
 @Service
 @Profile("local")
 public class LocalIRubleConverterService implements RublesService {
-    private static final int EIGHT = 8;
+    private static final int SCALE_EIGHT = 8;
 
     @Value("${app.usd.fixedRate}")
     private BigDecimal fixedRate;
+
     @Override
     public BigDecimal convertDollarsToRuble(BigDecimal dollars) {
-        return dollars.divide(fixedRate, EIGHT, RoundingMode.HALF_UP);
+        return dollars.divide(fixedRate, SCALE_EIGHT, RoundingMode.HALF_UP);
     }
+
     @Override
     public BigDecimal convertRublesToDollar(BigDecimal rubles) {
         return rubles.multiply(fixedRate);

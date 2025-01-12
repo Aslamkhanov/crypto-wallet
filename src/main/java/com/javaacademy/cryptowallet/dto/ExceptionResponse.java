@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "Представление ошибки")
-public class ExceptionResponseDto {
+public class ExceptionResponse {
     @Schema(description = "код ошибки")
     private int code;
     @Schema(description = "описание ошибки")

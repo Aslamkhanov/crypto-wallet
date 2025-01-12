@@ -1,6 +1,6 @@
 package com.javaacademy.cryptowallet.controller;
 
-import com.javaacademy.cryptowallet.dto.ExceptionResponseDto;
+import com.javaacademy.cryptowallet.dto.ExceptionResponse;
 import com.javaacademy.cryptowallet.dto.UpdatePasswordDto;
 import com.javaacademy.cryptowallet.dto.UserCreateDto;
 import com.javaacademy.cryptowallet.service.UserService;
@@ -12,12 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,7 +35,7 @@ public class UserController {
                     description = "Логин занят",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             ),
             @ApiResponse(
@@ -48,12 +43,11 @@ public class UserController {
                     description = "Ошибка на сервере",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             )
     }
     )
-
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
     public UserCreateDto registersNewUser(@RequestBody UserCreateDto userDto) {
@@ -74,7 +68,7 @@ public class UserController {
                     description = "Неверный пароль",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             ),
             @ApiResponse(
@@ -82,7 +76,7 @@ public class UserController {
                     description = "Ошибка на сервере",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             )
     }

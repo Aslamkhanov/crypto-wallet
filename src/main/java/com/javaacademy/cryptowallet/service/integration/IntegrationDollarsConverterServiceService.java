@@ -1,6 +1,6 @@
 package com.javaacademy.cryptowallet.service.integration;
 
-import com.javaacademy.cryptowallet.config.AppConfigUsd;
+import com.javaacademy.cryptowallet.config.PropertyConfigUsd;
 import com.javaacademy.cryptowallet.service.interfaces.DollarsService;
 import com.jayway.jsonpath.JsonPath;
 import lombok.Cleanup;
@@ -21,7 +21,7 @@ public class IntegrationDollarsConverterServiceService implements DollarsService
     private static final String FORMAT_USD = "$['%s']['usd']";
     private static final String FORMAT_URL = "%s/simple/price?ids=%s&vs_currencies=usd";
     private final OkHttpClient client;
-    private final AppConfigUsd appConfigUsd;
+    private final PropertyConfigUsd propertyConfigUsd;
 
     @SneakyThrows
     @Override
@@ -32,11 +32,11 @@ public class IntegrationDollarsConverterServiceService implements DollarsService
 
     private Request getRequest(String cryptoName) {
         String url = String.format(FORMAT_URL,
-                appConfigUsd.getUrl(), cryptoName);
+                propertyConfigUsd.getUrl(), cryptoName);
         return new Request.Builder()
                 .get()
                 .url(url)
-                .addHeader(appConfigUsd.getHeader(), appConfigUsd.getToken())
+                .addHeader(propertyConfigUsd.getHeader(), propertyConfigUsd.getToken())
                 .build();
     }
 

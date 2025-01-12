@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableConfigurationProperties({AppConfigUsd.class, AppConfigRub.class})
+@EnableConfigurationProperties({PropertyConfigUsd.class, PropertyConfigRub.class})
 public class App {
     @Bean
     public OkHttpClient client() {

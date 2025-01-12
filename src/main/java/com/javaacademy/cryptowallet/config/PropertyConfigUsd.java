@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "app.service.converter")
 @Setter
 @Getter
-public class AppConfigUsd {
+public class PropertyConfigUsd {
     private String url;
     private String header;
     private String token;

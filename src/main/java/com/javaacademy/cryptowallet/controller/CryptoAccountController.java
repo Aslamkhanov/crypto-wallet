@@ -2,7 +2,7 @@ package com.javaacademy.cryptowallet.controller;
 
 import com.javaacademy.cryptowallet.dto.CryptoAccountDto;
 import com.javaacademy.cryptowallet.dto.CryptoCreateDto;
-import com.javaacademy.cryptowallet.dto.ExceptionResponseDto;
+import com.javaacademy.cryptowallet.dto.ExceptionResponse;
 import com.javaacademy.cryptowallet.dto.ReplenishesAccountDto;
 import com.javaacademy.cryptowallet.entity.CryptoAccount;
 import com.javaacademy.cryptowallet.exeption.ResourceNotFoundException;
@@ -15,14 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -49,7 +42,7 @@ public class CryptoAccountController {
                     description = "крипто кошелек не найден",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             ),
             @ApiResponse(
@@ -57,7 +50,7 @@ public class CryptoAccountController {
                     description = "Ошибка на сервере",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             )
     }
@@ -70,7 +63,7 @@ public class CryptoAccountController {
     @Operation(
             summary = "Получаем баланс в рублях, со всех крипто счетов",
             description = "Получаем общий баланс в рублях, "
-                   + "всех крипто кошельков пользователя")
+                    + "всех крипто кошельков пользователя")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -81,7 +74,7 @@ public class CryptoAccountController {
                     description = "крипто кошельки не найдены",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             ),
             @ApiResponse(
@@ -89,7 +82,7 @@ public class CryptoAccountController {
                     description = "Ошибка на сервере",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             )
     }
@@ -112,7 +105,7 @@ public class CryptoAccountController {
                     description = "крипто кошелек не найден",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             ),
             @ApiResponse(
@@ -120,7 +113,7 @@ public class CryptoAccountController {
                     description = "Ошибка на сервере",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             )
     }
@@ -144,7 +137,7 @@ public class CryptoAccountController {
                     description = "крипто кошелек не найден",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             ),
             @ApiResponse(
@@ -152,7 +145,7 @@ public class CryptoAccountController {
                     description = "Ошибка на сервере",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             )
     }
@@ -175,7 +168,7 @@ public class CryptoAccountController {
                     description = "Ошибка",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             ),
             @ApiResponse(
@@ -183,7 +176,7 @@ public class CryptoAccountController {
                     description = "Ошибка на сервере",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             )
     }
@@ -208,7 +201,7 @@ public class CryptoAccountController {
                     description = "Крипто кошельки не найдены",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             ),
             @ApiResponse(
@@ -216,7 +209,7 @@ public class CryptoAccountController {
                     description = "Ошибка на сервере",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ExceptionResponseDto.class)
+                            schema = @Schema(implementation = ExceptionResponse.class)
                     )
             )
     }

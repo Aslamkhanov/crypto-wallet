@@ -25,30 +25,29 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class CryptoAccountService {
-    private static final int EIGHT = 8;
+    private static final int SCALE_EIGHT = 8;
     private final CryptoRepository cryptoRepository;
     private final UserRepository userRepository;
     private final CryptoAccountMapper accountMapper;
     private final DollarsService dollarsService;
     private final RublesService rublesService;
 
-    public CryptoAccountDto getAccount(UUID uuid) {
+    public CryptoAccount getAccount(UUID uuid) {
         if (!cryptoRepository.getAccountStorage().getCryptoData().containsKey(uuid)) {
             throw new RuntimeException("Такого счета нет: " + uuid);
         }
-        CryptoAccount cryptoAccount = cryptoRepository.getAccount(uuid);
-        return accountMapper.convertCryptoAccountDto(cryptoAccount);
+        return cryptoRepository.getAccount(uuid);
     }
 
     public String sellCryptocurrencyForRubles(ReplenishesAccountDto accountDto) {
         log.info("Снять со счета {} сумму {} рублей", accountDto.getId(), accountDto.getRublesAmount());
 
-        CryptoAccountDto cryptoAccount = getAccount(accountDto.getId());
+        CryptoAccount cryptoAccount = getAccount(accountDto.getId());
         String cryptoTypeName = cryptoAccount.getCryptoCurrencyType().getDescription();
         BigDecimal cryptocurrencyDollars = dollarsService.getCryptoValueInDollars(cryptoTypeName);
         BigDecimal dollars = rublesService.convertRublesToDollar(accountDto.getRublesAmount());
 
-        BigDecimal cryptoToSell = dollars.divide(cryptocurrencyDollars, EIGHT, RoundingMode.HALF_UP);
+        BigDecimal cryptoToSell = dollars.divide(cryptocurrencyDollars, SCALE_EIGHT, RoundingMode.HALF_UP);
 
         if (cryptoAccount.getBalance().compareTo(cryptoToSell) < 0) {
             throw new IllegalArgumentException("Недостаточно криптовалюты на счету");
@@ -67,7 +66,12 @@ public class CryptoAccountService {
         if (userAccounts.isEmpty()) {
             throw new RuntimeException("У пользователя " + userName + " нет счетов");
         }
-        BigDecimal totalRubleEquivalent = userAccounts.stream()
+        BigDecimal totalRubleEquivalent = getTotalRubleEquivalent(userAccounts);
+        log.info("Рублевый эквивалент всех счетов пользователя {}: {}", userName, totalRubleEquivalent);
+       return totalRubleEquivalent;
+    }
+    private BigDecimal getTotalRubleEquivalent(List<CryptoAccount> userAccounts) {
+       return userAccounts.stream()
                 .map(account -> {
                     String cryptoTypeName = account.getCryptoCurrencyType().getDescription();
                     BigDecimal cryptocurrencyDollars = dollarsService.getCryptoValueInDollars(cryptoTypeName);
@@ -75,13 +79,10 @@ public class CryptoAccountService {
                     return rublesService.convertDollarsToRuble(balanceInDollars);
                 })
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        log.info("Рублевый эквивалент всех счетов пользователя {}: {}", userName, totalRubleEquivalent);
-        return totalRubleEquivalent;
     }
 
     public BigDecimal getAccountBalanceInRubles(UUID uuid) {
-        CryptoAccountDto cryptoAccount = getAccount(uuid);
+        CryptoAccount cryptoAccount = getAccount(uuid);
         String cryptoTypeName = cryptoAccount.getCryptoCurrencyType().getDescription();
 
         BigDecimal cryptocurrencyDollars = dollarsService.getCryptoValueInDollars(cryptoTypeName);
@@ -91,13 +92,13 @@ public class CryptoAccountService {
     }
 
     public void buyCryptocurrencyForRubles(ReplenishesAccountDto accountDto) {
-        CryptoAccountDto cryptoAccount = getAccount(accountDto.getId());
+        CryptoAccount cryptoAccount = getAccount(accountDto.getId());
         String cryptoTypeName = cryptoAccount.getCryptoCurrencyType().getDescription();
 
         BigDecimal cryptocurrencyDollars = dollarsService.getCryptoValueInDollars(cryptoTypeName);
         BigDecimal dollars = rublesService.convertRublesToDollar(accountDto.getRublesAmount());
 
-        BigDecimal totalSum = dollars.divide(cryptocurrencyDollars, EIGHT, RoundingMode.HALF_UP);
+        BigDecimal totalSum = dollars.divide(cryptocurrencyDollars, SCALE_EIGHT, RoundingMode.HALF_UP);
         cryptoAccount.setBalance(cryptoAccount.getBalance().add(totalSum));
         log.info("Обновленный баланс счета {}: {}", accountDto.getId(), cryptoAccount.getBalance());
     }
@@ -115,9 +116,6 @@ public class CryptoAccountService {
     }
 
     public CryptoAccount createCryptoAccountUser(CryptoCreateDto cryptoCreateDto) {
-        if (!userRepository.getUserStorage().getData().containsKey(cryptoCreateDto.getUserName())) {
-            throw new RuntimeException("Такого пользователя нет: " + cryptoCreateDto.getUserName());
-        }
         CryptoAccount account = new CryptoAccount(
                 cryptoCreateDto.getUserName(),
                 cryptoCreateDto.getCryptoType(),

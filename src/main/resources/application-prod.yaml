@@ -1,8 +1,8 @@
 app:
   service:
     converter:
-    url: https://api.coingecko.com/api/v3
-    header: x_cg_demo_api_key
-    token: xCVqoMDWXQpoSpqNTCshp5Ua
+      url: https://api.coingecko.com/api/v3
+      header: x_cg_demo_api_key
+      token: xCVqoMDWXQpoSpqNTCshp5Ua
   service-cb:
     url: https://www.cbr-xml-daily.ru/latest.js
